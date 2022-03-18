@@ -12,4 +12,16 @@ public class VolumeGroup extends UUIDAndNameGenerator{
         physVol = pv;
         logVol = lv;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public ArrayList<PhysicalVolume> getPhysVol() {
+        return physVol;
+    }
+
+    public ArrayList<LogicalVolume> getLogVol() {
+        return logVol;
+    }
 }

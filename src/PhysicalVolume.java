@@ -9,4 +9,15 @@ public class PhysicalVolume extends UUIDAndNameGenerator{
         this.HD = HD;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public String getUUID() {
+        return UUID;
+    }
+
+    public HardDrive getHD() {
+        return HD;
+    }
 }

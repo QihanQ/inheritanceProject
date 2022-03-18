@@ -8,5 +8,11 @@ public class LogicalVolume extends UUIDAndNameGenerator{
         this.VG = VG;
     }
 
+    public int getSize() {
+        return size;
+    }
 
+    public VolumeGroup getVG() {
+        return VG;
+    }
 }

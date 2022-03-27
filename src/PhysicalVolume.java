@@ -1,6 +1,5 @@
 public class PhysicalVolume extends UUIDAndNameGenerator{
     private int size;
-    private String UUID;
     private HardDrive HD;
     private VolumeGroup VG;
     private boolean assigned;
@@ -30,9 +29,6 @@ public class PhysicalVolume extends UUIDAndNameGenerator{
     public boolean isAssigned()
     {
         return assigned;
-    }
-    public String getUUID() {
-        return UUID;
     }
 
     public HardDrive getHD() {

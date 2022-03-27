@@ -11,6 +11,8 @@ public class Main {
         ArrayList<HardDrive> hd = new ArrayList<HardDrive>();
         ArrayList<PhysicalVolume>  pv = new ArrayList<PhysicalVolume>();
         ArrayList<VolumeGroup> vg = new ArrayList<VolumeGroup>();
+        ArrayList<LogicalVolume> lv = new ArrayList<LogicalVolume>();
+
         while(i != "exit")
         {
             if(i.indexOf("install-drive ") == 0)
@@ -98,7 +100,17 @@ public class Main {
 
             else if(i.indexOf("pvlist") == 0)
             {
-
+                for(int n = 0; n < pv.size(); n++)
+                {
+                    String f = pv.get(n).getName() + ": [" + pv.get(n).getSize() + "G] ";
+                    if(pv.get(n).isAssigned())
+                    {
+                        f += "[" + pv.get(n).getVolumeGroup() + "] ";
+                    }
+                    f += "[" + pv.get(n).getUUIDName() + "]";
+                    System.out.println(f);
+                }
+                System.out.println("");
             }
 
             else if(i.indexOf("vgcreate") == 0) {
@@ -142,6 +154,130 @@ public class Main {
                         System.out.println("Volume Group " + v.getName() + " created\n");
                     }
                 }
+            }
+
+            else if(i.indexOf("vgextend") == 0)
+            {
+                i = i.substring(i.indexOf(" ") + 1);
+                String vgName = i.substring(0, i.indexOf(" "));
+                i = i.substring(i.indexOf(" ") + 1);;
+                String pvName = i;
+                boolean error = true;
+                int vgNum = -1;
+                for(int n = 0; n < vg.size(); n++)
+                {
+                    if(vg.get(n).getName().equals(vgName))
+                    {
+                        vgNum = n;
+                        error = false;
+                        break;
+                    }
+                }
+                if(error)
+                {
+                    System.out.println("Volume group does not exist\n");
+                }
+                else
+                {
+                    error = true;
+                    int pvNum = -1;
+                    for(int n = 0; n < pv.size(); n++)
+                    {
+                        if(pv.get(n).getName().equals(pvName) && pv.get(n).isAssigned() == false)
+                        {
+                            pvNum = n;
+                            error = false;
+                            break;
+                        }
+                    }
+                    if(error)
+                    {
+                        System.out.println("Physical volume does not exist or is already part of a Volume group\n");
+                    }
+                    else
+                    {
+                        pv.get(pvNum).setVolumeGroup(vg.get(vgNum));
+                        vg.get(vgNum).addPhysicalVolume(pv.get(pvNum));
+                        System.out.println("Physical Volume " + pv.get(pvNum).getName() + " has been added to " + vg.get(vgNum).getName());
+                        System.out.println("");
+                    }
+                }
+            }
+
+            else if(i.indexOf("vglist") == 0)
+            {
+                for(int n = 0; n < vg.size(); n++)
+                {
+                    String f = vg.get(n).getName() + ": total:[" + vg.get(n).getSize() + "G] ";
+                    f += "Available:[" + vg.get(n).getAvailableSpace() + "G] " + vg.get(n).getPhysVol();
+                    f += "[" + vg.get(n).getUUIDName() + "]";
+                    System.out.println(f);
+                }
+                System.out.println("");
+            }
+
+            else if(i.indexOf("lvcreate") == 0)
+            {
+                i = i.substring(i.indexOf(" ") + 1);
+                String name = i.substring(0, i.indexOf(" "));
+                i = i.substring(i.indexOf(" ") + 1);
+                int size = Integer.parseInt(i.substring(0, i.indexOf(" ") - 1));
+                i = i.substring(i.indexOf(" ") + 1);
+                String vgName = i;
+                boolean error = false;
+                for(int n = 0; n < lv.size(); n++)
+                {
+                    if(lv.get(n).getName().equals(name))
+                    {
+                        error = true;
+                        break;
+                    }
+                }
+                if(error)
+                {
+                    System.out.println("Logical Volume name already exists\n");
+                }
+                else
+                {
+                    error = true;
+                    int vgNum = -1;
+                    for(int n = 0; n < vg.size(); n++)
+                    {
+                        if(vg.get(n).getName().equals(vgName) && vg.get(n).getAvailableSpace() >= size)
+                        {
+                            vgNum = n;
+                            error = false;
+                            break;
+                        }
+                    }
+                    if(error)
+                    {
+                        System.out.println("Volume group name does not exists or Volume group does not have enough available space\n");
+                    }
+                    else
+                    {
+                        LogicalVolume logVol = new LogicalVolume(name, size, vg.get(vgNum));
+                        lv.add(logVol);
+                        vg.get(vgNum).addLogicalVolume(logVol);
+                        System.out.println("logical volume " + logVol.getName() + " created\n");
+                    }
+                }
+            }
+
+            else if(i.indexOf("lvlist") == 0)
+            {
+                for(int n = 0; n < vg.size(); n++)
+                {
+                    if(vg.get(n).hasLogicalVolume())
+                    {
+                        for(int j = 0; j < vg.get(n).getLogVol().size(); j++)
+                        {
+                            LogicalVolume logV = vg.get(n).getLogVol().get(j);
+                            System.out.println(logV.getName() + ": [" + logV.getSize() + "G] [" + logV.getVG().getName() + "] [" + logV.getUUIDName() + "]");
+                        }
+                    }
+                }
+                System.out.println("");
             }
             System.out.print("cmd# ");
             i = input.nextLine();

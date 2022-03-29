@@ -4,14 +4,31 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        /*File file = new File("info.txt");    //work in progress
+        File file = new File("info.txt");
         FileWriter fw = new FileWriter(file,true);
-        PrintWriter pw = new PrintWriter(fw);*/
+        PrintWriter pw = new PrintWriter(fw);
 
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the LVM system! Enter your commands:");
         System.out.print("cmd# ");
-        String i = input.nextLine();
+
+        Scanner scan = new Scanner(file);
+
+        String i;
+
+        if(scan.hasNextLine())
+        {
+            i = scan.nextLine();
+        }
+        else
+        {
+            i = input.nextLine();
+            if(i.indexOf("exit") == -1)
+            {
+                pw.println(i);
+            }
+        }
+
         boolean end = false;
 
         ArrayList<HardDrive> hd = new ArrayList<HardDrive>();
@@ -295,7 +312,7 @@ public class Main {
             else if(i.indexOf("exit") == 0)
             {
                 end = true;
-                //pw.close();
+                pw.close();
                 System.out.println("Saving data. Goodbye!");
                 break;
             }
@@ -306,11 +323,19 @@ public class Main {
             }
 
             System.out.print("cmd# ");
-            i = input.nextLine();
-            /*if(i.indexOf("exit") == -1)
+
+            if(scan.hasNextLine())
             {
-                pw.println(i);
-            }*/
+                i = scan.nextLine();
+            }
+            else
+            {
+                i = input.nextLine();
+                if(i.indexOf("exit") == -1)
+                {
+                    pw.println(i);
+                }
+            }
         }
     }
 }

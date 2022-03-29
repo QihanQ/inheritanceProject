@@ -1,19 +1,25 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        /*File file = new File("info.txt");    //work in progress
+        FileWriter fw = new FileWriter(file,true);
+        PrintWriter pw = new PrintWriter(fw);*/
+
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the LVM system! Enter your commands:");
         System.out.print("cmd# ");
         String i = input.nextLine();
+        boolean end = false;
 
         ArrayList<HardDrive> hd = new ArrayList<HardDrive>();
         ArrayList<PhysicalVolume>  pv = new ArrayList<PhysicalVolume>();
         ArrayList<VolumeGroup> vg = new ArrayList<VolumeGroup>();
         ArrayList<LogicalVolume> lv = new ArrayList<LogicalVolume>();
 
-        while(i != "exit")
+        while(!end)
         {
             if(i.indexOf("install-drive ") == 0)
             {
@@ -209,7 +215,13 @@ public class Main {
                 for(int n = 0; n < vg.size(); n++)
                 {
                     String f = vg.get(n).getName() + ": total:[" + vg.get(n).getSize() + "G] ";
-                    f += "Available:[" + vg.get(n).getAvailableSpace() + "G] " + vg.get(n).getPhysVol();
+                    f += "Available:[" + vg.get(n).getAvailableSpace() + "G] [";
+                    ArrayList<PhysicalVolume> phys = vg.get(n).getPhysVol();
+                    for(PhysicalVolume p : phys)
+                    {
+                        f += p.getName() + ",";
+                    }
+                    f = f.substring(0, f.length() - 1) + "] ";
                     f += "[" + vg.get(n).getUUIDName() + "]";
                     System.out.println(f);
                 }
@@ -279,8 +291,26 @@ public class Main {
                 }
                 System.out.println("");
             }
+
+            else if(i.indexOf("exit") == 0)
+            {
+                end = true;
+                //pw.close();
+                System.out.println("Saving data. Goodbye!");
+                break;
+            }
+
+            else
+            {
+                System.out.println("Not a command or wrong format\n");
+            }
+
             System.out.print("cmd# ");
             i = input.nextLine();
+            /*if(i.indexOf("exit") == -1)
+            {
+                pw.println(i);
+            }*/
         }
     }
 }

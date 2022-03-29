@@ -1,0 +1,64 @@
+Class 1: UUIDAndNameGenerator
+instance variables:
+    private String UUIDName;
+    private String name;
+
+Methods:
+    UUIDAndNameGenerator(String name)
+    getName()
+    getUUIDName()
+
+Class 2:HardDrive
+instance variables:
+    private String name;
+    private int size;
+
+Methods:
+    HardDrive(String n, int s)
+    getName()
+    getSize()
+    
+Class 3: LogicalVolume
+-This class is a subclass of UUIDAndNameGenerator
+instance variables:
+    private int size;
+    private VolumeGroup VG;
+   
+Methods:
+    LogicalVolume(String name, int size, VolumeGroup VG)
+    getSize()
+    getVG()
+    
+Class 4: PhysicalVolume
+-This class is a subclass of UUIDAndNameGenerator
+instance variables:
+    private int size;
+    private HardDrive HD;
+    private VolumeGroup VG;
+    private boolean assigned;
+
+Methods:
+    PhysicalVolume(String name, int size, HardDrive HD)
+    getSize()
+    setVolumeGroup(VolumeGroup volumeGroup)
+    getVolumeGroup()
+    isAssigned()
+    getHD()
+
+Class 5: VolumeGroup
+-This class is a subclass of UUIDAndNameGenerator
+instance variables:
+    private int size;
+    private PhysicalVolume PV;
+    private ArrayList<PhysicalVolume> physVol = new ArrayList<>();
+    private ArrayList<LogicalVolume> logVol = new ArrayList<>();
+
+Methods:
+    VolumeGroup(String name, PhysicalVolume PV)
+    getSize()
+    addPhysicalVolume(PhysicalVolume pv)
+    addLogicalVolume(LogicalVolume lv)
+    hasLogicalVolume()
+    getAvailableSpace()
+    getPhysVol()
+    getLogVol()
